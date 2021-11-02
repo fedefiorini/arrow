@@ -310,6 +310,7 @@
           </execution>
         </executions>
         <configuration>
+          <skip>true</skip>
           <configLocation>dev/checkstyle/checkstyle.xml</configLocation>
           <headerLocation>dev/checkstyle/checkstyle.license</headerLocation>
           <suppressionsLocation>dev/checkstyle/suppressions.xml</suppressionsLocation>
@@ -337,7 +338,7 @@
             </goals>
             <configuration>
               <ignoreNonCompile>true</ignoreNonCompile>
-              <failOnWarning>true</failOnWarning>
+              <failOnWarning>false</failOnWarning>
               <ignoredDependencies>
                 <!-- source annotations (not kept in compiled code) -->
                 <ignoredDependency>javax.annotation:javax.annotation-api:*</ignoredDependency>

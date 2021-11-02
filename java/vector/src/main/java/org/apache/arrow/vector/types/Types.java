@@ -43,6 +43,7 @@ import org.apache.arrow.vector.LargeVarBinaryVector;
 import org.apache.arrow.vector.LargeVarCharVector;
 import org.apache.arrow.vector.NullVector;
 import org.apache.arrow.vector.SmallIntVector;
+import org.apache.arrow.vector.StringVector;
 import org.apache.arrow.vector.TimeMicroVector;
 import org.apache.arrow.vector.TimeMilliVector;
 import org.apache.arrow.vector.TimeNanoVector;
@@ -89,6 +90,7 @@ import org.apache.arrow.vector.complex.impl.LargeVarBinaryWriterImpl;
 import org.apache.arrow.vector.complex.impl.LargeVarCharWriterImpl;
 import org.apache.arrow.vector.complex.impl.NullableStructWriter;
 import org.apache.arrow.vector.complex.impl.SmallIntWriterImpl;
+import org.apache.arrow.vector.complex.impl.StringWriterImpl;
 import org.apache.arrow.vector.complex.impl.TimeMicroWriterImpl;
 import org.apache.arrow.vector.complex.impl.TimeMilliWriterImpl;
 import org.apache.arrow.vector.complex.impl.TimeNanoWriterImpl;
@@ -791,6 +793,19 @@ public class Types {
         return ((ExtensionTypeVector) vector).getUnderlyingVector().getMinorType().getNewFieldWriter(vector);
       }
     },
+    STRING(Utf8.INSTANCE) {
+      @Override
+      public FieldVector getNewVector(Field field, BufferAllocator allocator, CallBack schemaChangeCallback)
+      {
+        return new StringVector(field, allocator);
+      }
+
+      @Override
+      public FieldWriter getNewFieldWriter(ValueVector vector)
+      {
+        return new StringWriterImpl((StringVector) vector);
+      }
+    }
     ;
 
     private final ArrowType type;
