@@ -30,6 +30,8 @@ import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.util.TransferPair;
 
+import java.util.ArrayList;
+import java.util.Collections;
 /**
  * IntVector implements a fixed width (4 bytes) vector of
  * integer values which could be null. A validity buffer (bit vector) is
@@ -279,6 +281,12 @@ public final class IntVector extends BaseFixedWidthVector implements BaseIntVect
    */
   public static int get(final ArrowBuf buffer, final int index) {
     return buffer.getInt((long) index * TYPE_WIDTH);
+  }
+
+  public int getMin() {
+    ArrayList<Integer> vectorData = new ArrayList<>();
+    for (int i = 0; i < this.valueCount; i++) vectorData.add(i, this.get(i));
+    return (int) Collections.min(vectorData);
   }
 
 
