@@ -19,6 +19,8 @@ package org.apache.arrow.vector;
 
 import static org.apache.arrow.vector.NullCheckingForGet.NULL_CHECKING_ENABLED;
 
+import org.apache.arrow.algorithm.sort.DefaultVectorComparators;
+import org.apache.arrow.algorithm.sort.FixedWidthInPlaceVectorSorter;
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.vector.complex.impl.IntReaderImpl;
@@ -29,9 +31,6 @@ import org.apache.arrow.vector.types.Types.MinorType;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.util.TransferPair;
-
-import java.util.ArrayList;
-import java.util.Collections;
 /**
  * IntVector implements a fixed width (4 bytes) vector of
  * integer values which could be null. A validity buffer (bit vector) is
@@ -284,9 +283,11 @@ public final class IntVector extends BaseFixedWidthVector implements BaseIntVect
   }
 
   public int getMin() {
-    ArrayList<Integer> vectorData = new ArrayList<>();
-    for (int i = 0; i < this.valueCount; i++) vectorData.add(i, this.get(i));
-    return (int) Collections.min(vectorData);
+    DefaultVectorComparators.IntComparator comp = new DefaultVectorComparators.IntComparator();
+    FixedWidthInPlaceVectorSorter sorter = new FixedWidthInPlaceVectorSorter();
+
+    sorter.sortInPlace(this, comp);
+    return this.get(0);
   }
 
 
